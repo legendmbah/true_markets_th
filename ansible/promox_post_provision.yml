@@ -1,0 +1,50 @@
+---
+- name: Post-provision configuration for Rocky Linux 9.6 VMs
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Ensure EPEL repository is enabled
+      dnf:
+        name: epel-release
+        state: present
+
+    - name: Install basic system tools using DNF
+      dnf:
+        name:
+          - curl
+          - wget
+          - git
+          - net-tools
+          - htop
+          - unzip
+          - httpd  
+          - tree
+        state: present
+
+    - name: Install and enable Cockpit
+      dnf:
+        name: cockpit
+        state: present
+
+    - name: Enable and start cockpit service
+      systemd:
+        name: cockpit
+        enabled: yes
+        state: started
+
+    - name: Enable and start firewalld
+      systemd:
+        name: firewalld
+        enabled: yes
+        state: started
+
+    - name: Open firewall port for Cockpit
+      firewalld:
+        service: cockpit
+        permanent: true
+        state: enabled
+        immediate: yes
+
+    - name: Reload firewalld
+      command: firewall-cmd --reload

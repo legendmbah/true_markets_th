@@ -1,0 +1,4 @@
+[all]
+rocky-vm1 ansible_host=192.168.1.101 ansible_user=admin ansible_ssh_private_key_file=~/.ssh/id_rsa
+rocky-vm2 ansible_host=192.168.1.102 ansible_user=admin ansible_ssh_private_key_file=~/.ssh/id_rsa
+
