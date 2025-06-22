@@ -1,55 +1,31 @@
-terraform {
-  required_providers {
-    proxmox = {
-      source  = "Telmate/proxmox"
-      version = "2.9.14"
-    }
-  }
-}
-
-provider "proxmox" {
-  pm_api_url          = "https://your-proxmox-host:8006/api2/json"
-  pm_api_token_id     = "terraform@pve!mytoken"
-  pm_api_token_secret = var.pm_api_token_secret
-  pm_tls_insecure     = true
-}
-
 resource "proxmox_vm_qemu" "rocky_vm" {
-  count       = length(var.vm_configs)
-  name        = var.vm_configs[count.index].hostname
-  target_node = "proxmox" # change to your node name
+  count       = var.server_count
+  name        = "rocky-vm-${format("%02d", count.index + 1)}"
+  target_node = "proxmox"
   clone       = "rocky9-cloudinit-template"
   full_clone  = true
 
-  cores  = var.vm_configs[count.index].cpu
-  memory = var.vm_configs[count.index].ram
+  cores  = 2
+  memory = 2048
   scsihw = "virtio-scsi-pci"
 
   network {
     model   = "virtio"
     bridge  = "vmbr0"
-    macaddr = var.vm_configs[count.index].mac
+    macaddr = "00:11:22:33:44:${format("%02x", count.index + 1)}"
   }
 
   disk {
     slot     = 0
-    size     = "${var.vm_configs[count.index].disk}G"
+    size     = "20G"
     type     = "scsi"
     storage  = "local-lvm"
     iothread = 1
   }
 
   os_type    = "cloud-init"
-  ipconfig0  = "ip=${var.vm_configs[count.index].ip}/24,gw=192.168.1.1"
-  sshkeys    = file("home/tmadmin/.ssh/id_rsa.pub")
+  ipconfig0  = "ip=192.168.1.${100 + count.index}/24,gw=192.168.1.1"
+  sshkeys    = file("/mnt/d/tm_takehome/true_markets_th/tmadmin_pubkey.pub")
   ciuser     = "tmadmin"
-  cipassword = "changeme"
-}
-
-resource "null_resource" "ansible_post_config" {
-  depends_on = [proxmox_vm_qemu.rocky_vm]
-
-  provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ../ansible/inventory.ini ../ansible/playbook.yml"
-  }
+  cipassword = "Default_Super"
 }
