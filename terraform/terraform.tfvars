@@ -1,1 +1,6 @@
-#
+pm_api_url          = "https://your-proxmox-host:8006/api2/json"
+pm_api_token_id     = "terraform@pam!your-token-name"
+pm_api_token_secret = "your-token-secret"
+private_key_path    = "/home/bmbah/tmadmin_private_key"
+ssh_user       = "tmadmin"
+ssh_password   = "TrU3m@K37"

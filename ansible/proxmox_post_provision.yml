@@ -4,15 +4,9 @@
   become: true
 
   tasks:
-    - name: Ensure EPEL repository is enabled
-      dnf:
-        name: epel-release
-        state: present
-
     - name: Install basic system tools using DNF
       dnf:
         name:
-          - curl
           - wget
           - git
           - net-tools
