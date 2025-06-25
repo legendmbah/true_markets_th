@@ -1,15 +1,15 @@
-# 🖥️ True Markets VM Automation – Proxmox + Terraform + Ansible
+# True Markets VM Automation – Proxmox + Terraform + Ansible
 
-## 🔧 Requirements
+## Requirements
 
 To use this project, ensure the following are in place:
 
-- A Proxmox VE server with a **Rocky Linux 9.6 cloud-init template**
+- A Proxmox VE server access with a **Rocky Linux 9.6 cloud-init template**
 - A **Proxmox API token** with permissions to clone templates and provision VMs
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) v1.5 or later
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 - Git client
-- A Linux-based control host (WSL, native Linux, or Mac)
+- A Linux-based control host (Terraform Host)
 
 ---
 
@@ -49,47 +49,31 @@ This process is fully orchestrated. No manual intervention required.
 
 ###  Clone the Repository on Your Terraform Host
 
-```bash
-git clone https://github.com/legendmbah/true_markets_th.git
-cd true_markets_th/terraform
-
-
-## Instructions
-
-### Clone Remote Code Repo on terraform Sever
-
-```bash
-git clone https://github.com/legendmbah/true_markets_th.git
-cd true_markets_th/terraform
+    git clone https://github.com/legendmbah/true_markets_th.git
+    cd true_markets_th/terraform
 
 ### Configure Your Variables in terraform.tfvars
-proxmox_api_url     = "https://your-proxmox-host:8006/api2/json"
-proxmox_token_id    = "terraform@pam!api-token"
-proxmox_token_secret = "your_proxmox_api_token_secret"
+
+    proxmox_api_url     = "https://your-proxmox-host:8006/api2/json"
+    proxmox_token_id    = "terraform@pam!api-token"
+    proxmox_token_secret = "your_proxmox_api_token_secret"
 
 ### Initailize terraform to Download Provider Plugins
 
-```bash
-terraform init
+    terraform init
 
 ### Execute a dry Run to see what resources will be created
 
-```bash
-terraform plan
+    terraform plan
 
 ### Apply and Deploy
 
-```bash
-terraform apply --auto-approve
+    terraform apply --auto-approve
 
 This command will:
 
-    Provision server_count Rocky Linux VMs via Proxmox API
-
-    Assign IPs and configure cloud-init
-
-    Generate an Ansible inventory from VM IPs
-
-    Wait 5 minutes for stabilization
-
-    Trigger the Ansible playbook to configure the VMs
+- Provision server_count Rocky Linux VMs via Proxmox API
+- Assign IPs and configure cloud-init
+- Generate an Ansible inventory from VM IPs
+- Wait 5 minutes for stabilization
+- Trigger the Ansible playbook to configure the VMs
