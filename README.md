@@ -72,8 +72,10 @@ This process is fully orchestrated. No manual intervention required.
 
 This command will:
 
-- Provision server_count Rocky Linux VMs via Proxmox API
+**This will prompt for number of servers to be deployed and;** 
+
+- Provision specified number of Linux VMs via AWS API
 - Assign IPs and configure cloud-init
-- Generate an Ansible inventory from VM IPs
+- Generate an Ansible inventory from successfully deployed VM IPs 
 - Wait 5 minutes for stabilization
 - Trigger the Ansible playbook to configure the VMs
